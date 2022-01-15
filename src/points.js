@@ -247,7 +247,7 @@ exports.parse = (config, units) => {
 
         // adjusting new points
         for (const [new_name, new_point] of Object.entries(new_points)) {
-            
+
             // issuing a warning for duplicate keys
             if (Object.keys(points).includes(new_name)) {
                 throw new Error(`Key "${new_name}" defined more than once!`)
@@ -265,7 +265,7 @@ exports.parse = (config, units) => {
 
         // per-zone mirroring for the new keys
         const axis = parse_axis(mirror, `points.zones.${zone_name}.mirror`, all_points, units)
-        if (axis) {
+        if (axis !== undefined) {
             for (const new_point of Object.values(new_points)) {
                 const [mname, mp] = perform_mirror(new_point, axis)
                 if (mp) {
@@ -290,7 +290,7 @@ exports.parse = (config, units) => {
     const global_axis = parse_axis(global_mirror, `points.mirror`, points, units)
     const global_mirrored_points = {}
     for (const point of Object.values(points)) {
-        if (global_axis && point.mirrored === undefined) {
+        if (global_axis !== undefined && point.mirrored === undefined) {
             const [mname, mp] = perform_mirror(point, global_axis)
             if (mp) {
                 global_mirrored_points[mname] = mp
@@ -319,8 +319,8 @@ exports.visualize = (points, units) => {
     for (const [pname, p] of Object.entries(points)) {
         const w = p.meta.width * x_unit
         const h = p.meta.height * y_unit
-        const rect = u.rect(w, h, [-w/2, -h/2])
+        const rect = u.rect(w, h, [-w / 2, -h / 2])
         models[pname] = p.position(rect)
     }
-    return {models: models}
+    return { models: models }
 }
