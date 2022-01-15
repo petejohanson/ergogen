@@ -39,6 +39,11 @@ module.exports = class Point {
         return this
     }
 
+    rotateTowardPoint(point) {
+        this.r = m.angle.ofLineInDegrees({ type: 'line', origin: this.p, end: point.p })
+        return this
+    }
+
     mirror(x) {
         this.x = 2 * x - this.x
         this.r = -this.r
@@ -63,3 +68,4 @@ module.exports = class Point {
         return this.position(rect)
     }
 }
+

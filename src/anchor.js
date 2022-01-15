@@ -45,11 +45,18 @@ const anchor = exports.parse = (raw, name, points={}, check_unexpected=true, def
         }
     }
     if (raw.orient !== undefined) {
-        let angle = a.sane(raw.orient, `${name}.orient`, 'number')(units)
-        if (point.meta.mirrored) {
-            angle = -angle
-        } 
-        point.r += angle
+        if (a.type(raw.orient)() == 'string') {
+            parsed_ref = mirror_ref(raw.orient, mirror)
+            a.assert(points[parsed_ref], `Unknown point reference "${parsed_ref}" in orient "${name}"!`)
+            const resolved = points[parsed_ref]
+            point.rotateTowardPoint(resolved)
+        } else {
+            let angle = a.sane(raw.orient, `${name}.orient`, 'number')(units)
+            if (point.meta.mirrored) {
+                angle = -angle
+            }
+            point.r += angle
+        }
     }
     if (raw.shift !== undefined) {
         let xyval = a.wh(raw.shift, `${name}.shift`)(units)
@@ -59,11 +66,18 @@ const anchor = exports.parse = (raw, name, points={}, check_unexpected=true, def
         point.shift(xyval, true)
     }
     if (raw.rotate !== undefined) {
-        let angle = a.sane(raw.rotate, `${name}.rotate`, 'number')(units)
-        if (point.meta.mirrored) {
-            angle = -angle
-        } 
-        point.r += angle
+        if (a.type(raw.shift)() == 'string') {
+            parsed_ref = mirror_ref(raw.shift, mirror)
+            a.assert(points[parsed_ref], `Unknown point reference "${parsed_ref}" in shift "${name}"!`)
+            const resolved = points[parsed_ref]
+            point.rotateTowardPoint(resolved)
+        } else {
+            let angle = a.sane(raw.rotate, `${name}.rotate`, 'number')(units)
+            if (point.meta.mirrored) {
+                angle = -angle
+            }
+            point.r += angle
+        }
     }
     if (raw.affect !== undefined) {
         const candidate = point.clone()
